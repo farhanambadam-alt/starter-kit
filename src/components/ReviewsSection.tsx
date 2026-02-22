@@ -68,24 +68,24 @@ const ReviewsSection = ({ artists, reviews, selectedArtist, onSelectArtist }: Re
     <div className="animate-fade-in-up" style={{ animationDuration: '300ms', background: PAGE_BG }}>
       {/* Our Stylists Header */}
       <div className="px-5 pt-5 pb-1">
-        <div className="flex items-baseline justify-between mb-5">
+        <div className="flex items-center justify-between mb-4">
           <h2 className="font-serif text-xl text-truffle italic">Our Stylists</h2>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <button
               onClick={() => scrollBy(-1)}
               disabled={!canScrollLeft}
-              className="w-7 h-7 rounded-full flex items-center justify-center transition-colors disabled:opacity-30"
-              style={{ background: CONTAINER_BG, border: `1px solid ${PILL_BORDER}` }}
+              className="w-8 h-8 rounded-xl flex items-center justify-center transition-all duration-200 disabled:opacity-20 active:scale-90"
+              style={{ background: '#FFFFFF', border: `1.5px solid ${canScrollLeft ? MUTED_BRONZE : PILL_BORDER}`, boxShadow: canScrollLeft ? '0 2px 8px rgba(0,0,0,0.08)' : 'none' }}
             >
-              <ChevronLeft size={14} style={{ color: MUTED_BRONZE }} />
+              <ChevronLeft size={16} style={{ color: canScrollLeft ? MUTED_BRONZE : MUTED_TAUPE }} />
             </button>
             <button
               onClick={() => scrollBy(1)}
               disabled={!canScrollRight}
-              className="w-7 h-7 rounded-full flex items-center justify-center transition-colors disabled:opacity-30"
-              style={{ background: CONTAINER_BG, border: `1px solid ${PILL_BORDER}` }}
+              className="w-8 h-8 rounded-xl flex items-center justify-center transition-all duration-200 disabled:opacity-20 active:scale-90"
+              style={{ background: canScrollRight ? MUTED_BRONZE : '#FFFFFF', border: `1.5px solid ${canScrollRight ? MUTED_BRONZE : PILL_BORDER}`, boxShadow: canScrollRight ? '0 2px 8px rgba(0,0,0,0.1)' : 'none' }}
             >
-              <ChevronRight size={14} style={{ color: MUTED_BRONZE }} />
+              <ChevronRight size={16} style={{ color: canScrollRight ? '#FFFFFF' : MUTED_TAUPE }} />
             </button>
           </div>
         </div>

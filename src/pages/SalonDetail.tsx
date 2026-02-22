@@ -97,28 +97,32 @@ const SalonDetail = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-3 mt-3 pt-3 border-t border-border justify-center">
-          <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary/10 hover:bg-primary/15 transition-colors">
-            <Navigation size={15} className="text-primary" />
-            <span className="text-xs font-heading font-medium text-primary">Direction</span>
+        <div className="flex gap-2.5 mt-3 pt-3 border-t border-border">
+          <button className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-card border border-border hover:border-primary/30 hover:shadow-md transition-all duration-200 active:scale-[0.97] group">
+            <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 transition-colors">
+              <Navigation size={14} className="text-primary" />
+            </div>
+            <span className="text-xs font-heading font-semibold text-foreground">Direction</span>
           </button>
-          <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary/10 hover:bg-primary/15 transition-colors">
-            <Share2 size={15} className="text-primary" />
-            <span className="text-xs font-heading font-medium text-primary">Share</span>
+          <button className="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl bg-card border border-border hover:border-primary/30 hover:shadow-md transition-all duration-200 active:scale-[0.97] group">
+            <div className="w-8 h-8 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/15 transition-colors">
+              <Share2 size={14} className="text-primary" />
+            </div>
+            <span className="text-xs font-heading font-semibold text-foreground">Share</span>
           </button>
         </div>
       </div>
 
       {/* Tab Nav */}
-      <div className="flex gap-2 px-4 py-3">
+      <div className="mx-4 my-3 p-1 bg-secondary/60 rounded-2xl flex gap-1">
         {(['services', 'about', 'reviews', 'gallery'] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`flex-1 py-2 rounded-xl text-xs font-heading font-semibold capitalize transition-all ${
+            className={`flex-1 py-2.5 rounded-xl text-xs font-heading font-semibold capitalize transition-all duration-200 ${
               activeTab === tab
-                ? 'bg-primary text-primary-foreground shadow-md'
-                : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
+                ? 'bg-card text-foreground shadow-sm border border-border/50'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             {tab}
