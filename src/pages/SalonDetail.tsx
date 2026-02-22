@@ -136,34 +136,14 @@ const SalonDetail = () => {
           <div className="px-4 pt-4">
             <h3 className="font-heading font-semibold text-sm text-foreground mb-3">Our Artists</h3>
             <div className="grid grid-cols-5 gap-2 pb-2">
-              <button
-                onClick={() => setSelectedArtist(null)}
-                className="flex flex-col items-center gap-1"
-              >
-                <div className={`w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-[10px] font-heading font-semibold text-foreground transition-all duration-300 ${
-                  !selectedArtist ? 'ring-2 ring-primary shadow-md' : 'border border-border'
-                }`}>
-                  All
+              {artists.map((artist) => (
+                <div key={artist.id} className="flex flex-col items-center gap-1">
+                  <div className="w-12 h-12 rounded-xl overflow-hidden border border-border">
+                    <img src={artist.avatar} alt={artist.name} className="w-full h-full object-cover" />
+                  </div>
+                  <span className="text-[9px] font-body leading-tight truncate w-full text-center text-muted-foreground">{artist.name}</span>
                 </div>
-                <span className={`text-[9px] font-body leading-tight ${!selectedArtist ? 'text-primary font-medium' : 'text-muted-foreground'}`}>All</span>
-              </button>
-              {artists.map((artist) => {
-                const isSelected = selectedArtist === artist.id;
-                return (
-                  <button
-                    key={artist.id}
-                    onClick={() => setSelectedArtist(isSelected ? null : artist.id)}
-                    className="flex flex-col items-center gap-1"
-                  >
-                    <div className={`w-12 h-12 rounded-xl overflow-hidden transition-all duration-300 ${
-                      isSelected ? 'ring-2 ring-primary shadow-md' : 'border border-border'
-                    }`}>
-                      <img src={artist.avatar} alt={artist.name} className="w-full h-full object-cover" />
-                    </div>
-                    <span className={`text-[9px] font-body leading-tight truncate w-full text-center ${isSelected ? 'text-primary font-medium' : 'text-muted-foreground'}`}>{artist.name}</span>
-                  </button>
-                );
-              })}
+              ))}
             </div>
           </div>
 
