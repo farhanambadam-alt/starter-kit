@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Share2, Star, MapPin, Clock, ChevronRight, ThumbsUp, Plus, Minus, Phone, MessageCircle, Navigation, Heart, ShieldCheck, QrCode } from 'lucide-react';
+import { ArrowLeft, Share2, Star, MapPin, Clock, ChevronRight, ThumbsUp, Plus, Minus, Navigation, Heart, ShieldCheck, ChevronLeft } from 'lucide-react';
 import ReviewsSection from '@/components/ReviewsSection';
 import { useNavigate, useParams } from 'react-router-dom';
 import { featuredSalons, nearbySalons, services, artists, reviews } from '@/data/mockData';
@@ -97,48 +97,28 @@ const SalonDetail = () => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-4 mt-3 pt-3 border-t border-border">
-          <button className="flex flex-col items-center gap-1 flex-1">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <Phone size={16} className="text-primary" />
-            </div>
-            <span className="text-[10px] font-body text-muted-foreground">Call</span>
+        <div className="flex gap-3 mt-3 pt-3 border-t border-border justify-center">
+          <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary/10 hover:bg-primary/15 transition-colors">
+            <Navigation size={15} className="text-primary" />
+            <span className="text-xs font-heading font-medium text-primary">Direction</span>
           </button>
-          <button className="flex flex-col items-center gap-1 flex-1">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <MessageCircle size={16} className="text-primary" />
-            </div>
-            <span className="text-[10px] font-body text-muted-foreground">Chat</span>
-          </button>
-          <button className="flex flex-col items-center gap-1 flex-1">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <Navigation size={16} className="text-primary" />
-            </div>
-            <span className="text-[10px] font-body text-muted-foreground">Direction</span>
-          </button>
-          <button className="flex flex-col items-center gap-1 flex-1">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <Share2 size={16} className="text-primary" />
-            </div>
-            <span className="text-[10px] font-body text-muted-foreground">Share</span>
-          </button>
-          <button className="flex flex-col items-center gap-1 flex-1">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <QrCode size={16} className="text-primary" />
-            </div>
-            <span className="text-[10px] font-body text-muted-foreground">QR Code</span>
+          <button className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary/10 hover:bg-primary/15 transition-colors">
+            <Share2 size={15} className="text-primary" />
+            <span className="text-xs font-heading font-medium text-primary">Share</span>
           </button>
         </div>
       </div>
 
       {/* Tab Nav */}
-      <div className="flex border-b border-border px-4">
+      <div className="flex gap-2 px-4 py-3">
         {(['services', 'about', 'reviews', 'gallery'] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2.5 text-xs font-heading font-medium capitalize transition-colors border-b-2 ${
-              activeTab === tab ? 'border-primary text-primary' : 'border-transparent text-muted-foreground'
+            className={`flex-1 py-2 rounded-xl text-xs font-heading font-semibold capitalize transition-all ${
+              activeTab === tab
+                ? 'bg-primary text-primary-foreground shadow-md'
+                : 'bg-secondary text-muted-foreground hover:bg-secondary/80'
             }`}
           >
             {tab}
@@ -148,21 +128,20 @@ const SalonDetail = () => {
 
       {activeTab === 'services' && (
         <div className="animate-fade-in-up" style={{ animationDuration: '300ms' }}>
-          {/* Artists - outside glass */}
+          {/* Artists - grid layout */}
           <div className="px-4 pt-4">
             <h3 className="font-heading font-semibold text-sm text-foreground mb-3">Our Artists</h3>
-            <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2 items-end">
+            <div className="grid grid-cols-5 gap-2 pb-2">
               <button
                 onClick={() => setSelectedArtist(null)}
-                className="flex flex-col items-center gap-1 flex-shrink-0 relative"
+                className="flex flex-col items-center gap-1"
               >
-                <div className={`rounded-full bg-secondary flex items-center justify-center text-xs font-heading font-medium text-foreground border-2 transition-all duration-300 ease-out ${
-                  !selectedArtist ? 'w-16 h-16 border-primary shadow-lg' : 'w-14 h-14 border-transparent'
-                }`} style={!selectedArtist ? { animation: 'jelly 0.5s ease' } : undefined}>
+                <div className={`w-12 h-12 rounded-xl bg-secondary flex items-center justify-center text-[10px] font-heading font-semibold text-foreground transition-all duration-300 ${
+                  !selectedArtist ? 'ring-2 ring-primary shadow-md' : 'border border-border'
+                }`}>
                   All
                 </div>
-                <span className={`text-[10px] font-body transition-colors duration-200 ${!selectedArtist ? 'text-primary font-medium' : 'text-muted-foreground'}`}>All Artists</span>
-                {!selectedArtist && <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-20 h-4 glass-orange rounded-t-xl -z-10" />}
+                <span className={`text-[9px] font-body leading-tight ${!selectedArtist ? 'text-primary font-medium' : 'text-muted-foreground'}`}>All</span>
               </button>
               {artists.map((artist) => {
                 const isSelected = selectedArtist === artist.id;
@@ -170,15 +149,14 @@ const SalonDetail = () => {
                   <button
                     key={artist.id}
                     onClick={() => setSelectedArtist(isSelected ? null : artist.id)}
-                    className="flex flex-col items-center gap-1 flex-shrink-0 relative"
+                    className="flex flex-col items-center gap-1"
                   >
-                    <div className={`rounded-full overflow-hidden border-2 transition-all duration-300 ease-out ${
-                      isSelected ? 'w-16 h-16 border-primary shadow-lg' : 'w-14 h-14 border-transparent'
-                    }`} style={isSelected ? { animation: 'jelly 0.5s ease' } : undefined}>
+                    <div className={`w-12 h-12 rounded-xl overflow-hidden transition-all duration-300 ${
+                      isSelected ? 'ring-2 ring-primary shadow-md' : 'border border-border'
+                    }`}>
                       <img src={artist.avatar} alt={artist.name} className="w-full h-full object-cover" />
                     </div>
-                    <span className={`text-[10px] font-body transition-colors duration-200 whitespace-nowrap ${isSelected ? 'text-primary font-medium' : 'text-muted-foreground'}`}>{artist.name}</span>
-                    {isSelected && <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-20 h-4 glass-orange rounded-t-xl -z-10" />}
+                    <span className={`text-[9px] font-body leading-tight truncate w-full text-center ${isSelected ? 'text-primary font-medium' : 'text-muted-foreground'}`}>{artist.name}</span>
                   </button>
                 );
               })}

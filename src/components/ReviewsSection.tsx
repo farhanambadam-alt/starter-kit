@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Star, CheckCircle2 } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Star, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Artist, Review } from '@/types/salon';
 
 interface ReviewsSectionProps {
@@ -45,22 +45,55 @@ const ReviewsSection = ({ artists, reviews, selectedArtist, onSelectArtist }: Re
     return () => clearTimeout(timer);
   }, [selectedArtist]);
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const updateScrollButtons = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 4);
+  };
+
+  useEffect(() => {
+    updateScrollButtons();
+  }, []);
+
+  const scrollBy = (dir: number) => {
+    scrollRef.current?.scrollBy({ left: dir * 160, behavior: 'smooth' });
+  };
+
   return (
     <div className="animate-fade-in-up" style={{ animationDuration: '300ms', background: PAGE_BG }}>
       {/* Our Stylists Header */}
       <div className="px-5 pt-5 pb-1">
         <div className="flex items-baseline justify-between mb-5">
           <h2 className="font-serif text-xl text-truffle italic">Our Stylists</h2>
-          <button
-            className="text-[11px] font-sans font-semibold uppercase tracking-widest"
-            style={{ color: MUTED_TAUPE }}
-          >
-            View All
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => scrollBy(-1)}
+              disabled={!canScrollLeft}
+              className="w-7 h-7 rounded-full flex items-center justify-center transition-colors disabled:opacity-30"
+              style={{ background: CONTAINER_BG, border: `1px solid ${PILL_BORDER}` }}
+            >
+              <ChevronLeft size={14} style={{ color: MUTED_BRONZE }} />
+            </button>
+            <button
+              onClick={() => scrollBy(1)}
+              disabled={!canScrollRight}
+              className="w-7 h-7 rounded-full flex items-center justify-center transition-colors disabled:opacity-30"
+              style={{ background: CONTAINER_BG, border: `1px solid ${PILL_BORDER}` }}
+            >
+              <ChevronRight size={14} style={{ color: MUTED_BRONZE }} />
+            </button>
+          </div>
         </div>
 
-        {/* Artist Selector — horizontally scrollable */}
+        {/* Artist Selector — horizontally scrollable with arrows */}
         <div
+          ref={scrollRef}
+          onScroll={updateScrollButtons}
           className="flex overflow-x-auto scrollbar-hide pb-3 items-end gap-3"
         >
           {/* All button */}
