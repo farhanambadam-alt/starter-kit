@@ -72,7 +72,7 @@ const ReviewsSection = ({ artists, reviews, selectedArtist, onSelectArtist }: Re
               className={`rounded-xl flex items-center justify-center font-sans font-bold text-truffle transition-all duration-300 ease-out ${
                 !selectedArtist
                   ? 'w-14 h-14 sm:w-16 sm:h-16 text-xs ring-2 ring-bronze/50 shadow-md'
-                  : 'w-12 h-12 sm:w-14 sm:h-14 text-[11px] opacity-50'
+                  : 'w-12 h-12 sm:w-14 sm:h-14 text-[11px]'
               }`}
               style={{
                 background: CONTAINER_BG,
@@ -99,7 +99,7 @@ const ReviewsSection = ({ artists, reviews, selectedArtist, onSelectArtist }: Re
                   className={`rounded-xl overflow-hidden transition-all duration-300 ease-out ${
                     isSelected
                       ? 'w-14 h-14 sm:w-16 sm:h-16 ring-2 ring-bronze/50 shadow-md'
-                      : 'w-12 h-12 sm:w-14 sm:h-14 opacity-50'
+                      : 'w-12 h-12 sm:w-14 sm:h-14'
                   }`}
                   style={{
                     border: `${isSelected ? '2px' : '1px'} solid ${isSelected ? MUTED_BRONZE : PILL_BORDER}`,
@@ -134,8 +134,8 @@ const ReviewsSection = ({ artists, reviews, selectedArtist, onSelectArtist }: Re
           {currentArtist ? (
             <div className="flex items-center gap-3 mb-3">
               <div
-                className="w-12 h-12 rounded-2xl overflow-hidden flex-shrink-0"
-                style={{ border: `1px solid ${PILL_BORDER}` }}
+                className="w-20 h-20 rounded-2xl overflow-hidden flex-shrink-0"
+                style={{ border: `1.5px solid ${PILL_BORDER}` }}
               >
                 <img src={currentArtist.avatar} alt={currentArtist.name} className="w-full h-full object-cover" />
               </div>
