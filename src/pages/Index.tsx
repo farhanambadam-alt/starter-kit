@@ -3,7 +3,7 @@ import { Search, MapPin, Bell, SlidersHorizontal, ChevronDown, Mic, Map, Trendin
 import FeaturedCarousel from '@/components/FeaturedCarousel';
 import CategoryChips from '@/components/CategoryChips';
 import NearbySalonCard from '@/components/NearbySalonCard';
-import { categories, featuredSalons, nearbySalons } from '@/data/mockData';
+import { maleCategories, femaleCategories, featuredSalons, nearbySalons } from '@/data/mockData';
 
 const searchSuggestions = ['Haircut near me', 'Bridal makeup', 'Hair coloring', 'Beard trim', 'Spa packages'];
 
@@ -138,41 +138,39 @@ const HomePage = () => {
         )}
       </div>
 
-      {/* Gender Toggle */}
-      <div className="px-4 pb-3">
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-body text-muted-foreground mr-1">Select Gender</span>
-          <div className="relative flex bg-secondary rounded-xl p-0.5">
-            <div
-              className="absolute top-0.5 bottom-0.5 rounded-lg bg-primary transition-transform duration-250 ease-out"
-              style={{
-                width: 'calc(50% - 2px)',
-                transform: gender === 'male' ? 'translateX(2px)' : 'translateX(calc(100% + 2px))',
-              }}
-            />
-            <button
-              onClick={() => setGender('male')}
-              className={`relative z-10 px-5 py-1.5 text-xs font-heading font-medium rounded-lg transition-colors duration-200 ${
-                gender === 'male' ? 'text-primary-foreground' : 'text-muted-foreground'
-              }`}
-            >
-              Male
-            </button>
-            <button
-              onClick={() => setGender('female')}
-              className={`relative z-10 px-5 py-1.5 text-xs font-heading font-medium rounded-lg transition-colors duration-200 ${
-                gender === 'female' ? 'text-primary-foreground' : 'text-muted-foreground'
-              }`}
-            >
-              Female
-            </button>
-          </div>
+      {/* Gender Toggle + Categories */}
+      <div className="px-4 pb-2">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setGender('male')}
+            className={`relative flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-heading font-semibold transition-all duration-300 active:scale-95 ${
+              gender === 'male'
+                ? 'bg-foreground text-background shadow-lg'
+                : 'bg-card text-muted-foreground border border-border'
+            }`}
+          >
+            <span className="text-base">🧔</span>
+            Male
+            {gender === 'male' && <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />}
+          </button>
+          <button
+            onClick={() => setGender('female')}
+            className={`relative flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-heading font-semibold transition-all duration-300 active:scale-95 ${
+              gender === 'female'
+                ? 'bg-foreground text-background shadow-lg'
+                : 'bg-card text-muted-foreground border border-border'
+            }`}
+          >
+            <span className="text-base">👩</span>
+            Female
+            {gender === 'female' && <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />}
+          </button>
         </div>
       </div>
 
       {/* Categories */}
       <CategoryChips
-        categories={categories}
+        categories={gender === 'male' ? maleCategories : femaleCategories}
         selected={selectedCategory}
         onSelect={(id) => setSelectedCategory(id === selectedCategory ? null : id)}
       />

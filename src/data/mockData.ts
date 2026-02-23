@@ -3,16 +3,28 @@ import salon2 from '@/assets/salon-2.jpg';
 import salon3 from '@/assets/salon-3.jpg';
 import type { Salon, Service, Artist, Review, Booking, Category } from '@/types/salon';
 
-export const categories: Category[] = [
+export const maleCategories: Category[] = [
+  { id: '1', name: 'Haircut', image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=120&h=120&fit=crop' },
+  { id: '3', name: 'Hair Color', image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=120&h=120&fit=crop' },
+  { id: '9', name: 'Beard Trim', image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=120&h=120&fit=crop' },
+  { id: '6', name: 'Massage', image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=120&h=120&fit=crop' },
+  { id: '8', name: 'Spa', image: 'https://images.unsplash.com/photo-1540555700478-4be289fbec6d?w=120&h=120&fit=crop' },
+  { id: '10', name: 'Facial', image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=120&h=120&fit=crop' },
+];
+
+export const femaleCategories: Category[] = [
   { id: '1', name: 'Haircut', image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=120&h=120&fit=crop' },
   { id: '2', name: 'Skin Care', image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=120&h=120&fit=crop' },
   { id: '3', name: 'Hair Color', image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=120&h=120&fit=crop' },
   { id: '4', name: 'Manicure', image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=120&h=120&fit=crop' },
   { id: '5', name: 'Bridal', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=120&h=120&fit=crop' },
-  { id: '6', name: 'Massage', image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=120&h=120&fit=crop' },
   { id: '7', name: 'Pedicure', image: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=120&h=120&fit=crop' },
+  { id: '6', name: 'Massage', image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=120&h=120&fit=crop' },
   { id: '8', name: 'Spa', image: 'https://images.unsplash.com/photo-1540555700478-4be289fbec6d?w=120&h=120&fit=crop' },
 ];
+
+// Keep legacy export for backward compat
+export const categories = femaleCategories;
 
 export const featuredSalons: Salon[] = [
   {
