@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Search, MapPin, Bell, SlidersHorizontal, ChevronDown, Mic, Map, TrendingUp } from 'lucide-react';
+import { Search, MapPin, Bell, SlidersHorizontal, Mic, Map, TrendingUp, Sparkles } from 'lucide-react';
 import FeaturedCarousel from '@/components/FeaturedCarousel';
 import CategoryChips from '@/components/CategoryChips';
 import NearbySalonCard from '@/components/NearbySalonCard';
@@ -17,9 +17,7 @@ const HomePage = () => {
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
 
-  // Save preferences
   useEffect(() => {
     localStorage.setItem('preferred_gender', gender);
   }, [gender]);
@@ -28,25 +26,14 @@ const HomePage = () => {
     if (selectedCategory) localStorage.setItem('preferred_category', selectedCategory);
   }, [selectedCategory]);
 
-  // Simulate loading
   useEffect(() => {
     const t = setTimeout(() => setIsLoading(false), 1200);
     return () => clearTimeout(t);
   }, []);
 
-  // Pull to refresh
-  const handleRefresh = useCallback(() => {
-    setRefreshing(true);
-    setIsLoading(true);
-    setTimeout(() => {
-      setRefreshing(false);
-      setIsLoading(false);
-    }, 1500);
-  }, []);
-
   const SkeletonCard = () => (
-    <div className="flex-shrink-0 w-52 bg-card rounded-2xl overflow-hidden card-shadow">
-      <div className="h-32 skeleton-shimmer rounded-t-2xl" />
+    <div className="flex-shrink-0 w-44 sm:w-52 bg-card rounded-2xl overflow-hidden card-shadow">
+      <div className="h-28 sm:h-32 skeleton-shimmer rounded-t-2xl" />
       <div className="p-3 space-y-2">
         <div className="h-4 w-3/4 skeleton-shimmer rounded-full" />
         <div className="h-3 w-1/2 skeleton-shimmer rounded-full" />
@@ -65,7 +52,7 @@ const HomePage = () => {
       <header className="px-4 pt-4 pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden">
+            <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-primary/30">
               <img
                 src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop"
                 alt="avatar"
@@ -73,40 +60,39 @@ const HomePage = () => {
               />
             </div>
             <div>
-              <p className="text-xs text-muted-foreground font-body">Hello,</p>
-              <p className="font-heading font-semibold text-sm text-foreground">Aarav</p>
+              <p className="text-[11px] text-muted-foreground font-body leading-none">Hello,</p>
+              <p className="font-body font-semibold text-sm text-foreground leading-tight">Aarav</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button className="flex items-center gap-1 bg-secondary px-3 py-1.5 rounded-full">
-              <MapPin size={14} className="text-primary" />
-              <span className="text-xs font-body font-medium text-foreground">Bangalore</span>
-              <ChevronDown size={12} className="text-muted-foreground" />
+          <div className="flex items-center gap-2">
+            <button className="flex items-center gap-1 bg-card border border-border px-2.5 py-1.5 rounded-full">
+              <MapPin size={13} className="text-primary" />
+              <span className="text-[11px] font-body font-medium text-foreground">Bangalore</span>
             </button>
-            <button className="relative p-2">
-              <Bell size={20} className="text-foreground" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full" />
+            <button className="relative p-2 bg-card border border-border rounded-full">
+              <Bell size={17} className="text-foreground" />
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-primary rounded-full" />
             </button>
           </div>
         </div>
       </header>
 
-      {/* Hero Text */}
-      <div className="px-4 pt-3 pb-1">
-        <h1 className="font-heading font-bold text-2xl text-foreground leading-tight">
-          Premium Salons,
+      {/* Hero */}
+      <div className="px-4 pt-2 pb-1">
+        <h1 className="font-heading font-semibold text-[22px] text-foreground leading-tight tracking-tight">
+          Find Your Perfect
         </h1>
-        <p className="font-heading font-light text-lg text-muted-foreground italic">
-          Handpicked for you.
+        <p className="font-heading text-lg text-primary italic">
+          Salon Experience
         </p>
       </div>
 
       {/* Search */}
-      <div className="px-4 py-3 relative">
-        <div className={`flex items-center gap-2 bg-card border rounded-2xl px-4 py-3 transition-all duration-250 ${
+      <div className="px-4 py-2.5 relative">
+        <div className={`flex items-center gap-2 bg-card border rounded-xl px-3.5 py-2.5 transition-all duration-250 ${
           searchFocused ? 'border-primary shadow-md' : 'border-border card-shadow'
         }`}>
-          <Search size={18} className="text-muted-foreground flex-shrink-0" />
+          <Search size={16} className="text-muted-foreground flex-shrink-0" />
           <input
             type="text"
             value={searchQuery}
@@ -116,21 +102,21 @@ const HomePage = () => {
             onFocus={() => setSearchFocused(true)}
             onBlur={() => setTimeout(() => setSearchFocused(false), 200)}
           />
-          <Mic size={18} className="text-muted-foreground flex-shrink-0 cursor-pointer active:text-primary transition-colors" />
-          <SlidersHorizontal size={18} className="text-muted-foreground flex-shrink-0 cursor-pointer" />
+          <Mic size={16} className="text-muted-foreground flex-shrink-0 cursor-pointer active:text-primary transition-colors" />
+          <div className="w-px h-4 bg-border" />
+          <SlidersHorizontal size={16} className="text-muted-foreground flex-shrink-0 cursor-pointer" />
         </div>
 
-        {/* Search Suggestions */}
         {searchFocused && !searchQuery && (
-          <div className="absolute left-4 right-4 top-full mt-1 bg-card border border-border rounded-2xl shadow-lg z-30 overflow-hidden animate-fade-in-up" style={{ animationDuration: '200ms' }}>
-            <p className="text-[10px] font-heading font-semibold text-muted-foreground px-4 pt-3 pb-1">RECENT SEARCHES</p>
+          <div className="absolute left-4 right-4 top-full mt-1 bg-card border border-border rounded-xl shadow-lg z-30 overflow-hidden animate-fade-in-up" style={{ animationDuration: '200ms' }}>
+            <p className="text-[10px] font-body font-semibold text-muted-foreground px-3.5 pt-2.5 pb-1 uppercase tracking-wider">Recent</p>
             {searchSuggestions.map((s) => (
               <button
                 key={s}
                 onMouseDown={() => setSearchQuery(s)}
-                className="w-full text-left px-4 py-2.5 text-sm font-body text-foreground hover:bg-secondary/50 flex items-center gap-2 transition-colors"
+                className="w-full text-left px-3.5 py-2 text-sm font-body text-foreground hover:bg-muted/50 flex items-center gap-2 transition-colors"
               >
-                <Search size={14} className="text-muted-foreground" />
+                <Search size={13} className="text-muted-foreground" />
                 {s}
               </button>
             ))}
@@ -138,32 +124,28 @@ const HomePage = () => {
         )}
       </div>
 
-      {/* Gender Toggle + Categories */}
-      <div className="px-4 pb-2">
-        <div className="flex items-center gap-3">
+      {/* Gender Toggle — compact inline toggle */}
+      <div className="px-4 pb-1">
+        <div className="inline-flex bg-card border border-border rounded-lg p-0.5">
           <button
             onClick={() => setGender('male')}
-            className={`relative flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-heading font-semibold transition-all duration-300 active:scale-95 ${
+            className={`px-4 py-1.5 rounded-md text-xs font-body font-semibold transition-all duration-200 ${
               gender === 'male'
-                ? 'bg-foreground text-background shadow-lg'
-                : 'bg-card text-muted-foreground border border-border'
+                ? 'bg-foreground text-background shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            <span className="text-base">🧔</span>
-            Male
-            {gender === 'male' && <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />}
+            Men
           </button>
           <button
             onClick={() => setGender('female')}
-            className={`relative flex items-center gap-2 px-5 py-2.5 rounded-2xl text-xs font-heading font-semibold transition-all duration-300 active:scale-95 ${
+            className={`px-4 py-1.5 rounded-md text-xs font-body font-semibold transition-all duration-200 ${
               gender === 'female'
-                ? 'bg-foreground text-background shadow-lg'
-                : 'bg-card text-muted-foreground border border-border'
+                ? 'bg-foreground text-background shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
-            <span className="text-base">👩</span>
-            Female
-            {gender === 'female' && <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />}
+            Women
           </button>
         </div>
       </div>
@@ -175,23 +157,26 @@ const HomePage = () => {
         onSelect={(id) => setSelectedCategory(id === selectedCategory ? null : id)}
       />
 
-      {/* Featured Section */}
-      <div className="pt-4">
-        <h2 className="font-heading font-semibold text-base text-foreground px-4 mb-3">
-          Best Salons in Your City
-        </h2>
+      {/* Featured */}
+      <div className="pt-3">
+        <div className="flex items-center justify-between px-4 mb-2.5">
+          <h2 className="font-heading font-semibold text-base text-foreground flex items-center gap-1.5">
+            <Sparkles size={14} className="text-primary" /> Top Picks
+          </h2>
+          <button className="text-[11px] font-body font-medium text-primary">See all</button>
+        </div>
         {isLoading ? <SkeletonCarousel /> : <FeaturedCarousel salons={featuredSalons} />}
       </div>
 
-      {/* Top Rated / Trending */}
-      <div className="pt-6">
-        <div className="flex items-center justify-between px-4 mb-3">
+      {/* Trending */}
+      <div className="pt-5">
+        <div className="flex items-center justify-between px-4 mb-2.5">
           <h2 className="font-heading font-semibold text-base text-foreground flex items-center gap-1.5">
-            <TrendingUp size={16} className="text-accent" /> Trending Now
+            <TrendingUp size={14} className="text-primary" /> Trending Now
           </h2>
-          <button className="text-xs font-body font-medium text-primary">View All →</button>
+          <button className="text-[11px] font-body font-medium text-primary">See all</button>
         </div>
-        <div className="flex gap-3 overflow-x-auto px-4 pb-4 scrollbar-hide">
+        <div className="flex gap-3 overflow-x-auto px-4 pb-3 scrollbar-hide">
           {isLoading ? (
             <>
               <SkeletonCard />
@@ -206,13 +191,13 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Nearby Salons */}
+      {/* Nearby */}
       <div className="pt-2">
-        <div className="flex items-center justify-between px-4 mb-3">
-          <h2 className="font-heading font-semibold text-base text-foreground">Nearby Salons</h2>
-          <button className="text-xs font-body font-medium text-primary">View All →</button>
+        <div className="flex items-center justify-between px-4 mb-2.5">
+          <h2 className="font-heading font-semibold text-base text-foreground">Nearby</h2>
+          <button className="text-[11px] font-body font-medium text-primary">See all</button>
         </div>
-        <div className="flex gap-3 overflow-x-auto px-4 pb-4 scrollbar-hide">
+        <div className="flex gap-3 overflow-x-auto px-4 pb-3 scrollbar-hide">
           {isLoading ? (
             <>
               <SkeletonCard />
@@ -226,35 +211,35 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Explore on Map */}
-      <div className="px-4 pb-4">
-        <button className="w-full flex items-center justify-center gap-2 bg-primary/10 text-primary font-heading font-semibold text-sm py-3 rounded-2xl active:scale-[0.98] transition-transform">
-          <Map size={18} />
-          Explore Salons on Map
+      {/* Map CTA */}
+      <div className="px-4 pb-3">
+        <button className="w-full flex items-center justify-center gap-2 bg-card border border-border text-foreground font-body font-semibold text-sm py-2.5 rounded-xl active:scale-[0.98] transition-transform">
+          <Map size={16} className="text-primary" />
+          Explore on Map
         </button>
       </div>
 
-      {/* Suggested For You */}
-      <div className="pt-2 pb-4">
-        <div className="flex items-center justify-between px-4 mb-3">
-          <h2 className="font-heading font-semibold text-base text-foreground">Suggested for You</h2>
+      {/* Suggested */}
+      <div className="pt-1 pb-4">
+        <div className="flex items-center justify-between px-4 mb-2.5">
+          <h2 className="font-heading font-semibold text-base text-foreground">Suggested</h2>
         </div>
-        <div className="px-4 space-y-3">
+        <div className="px-4 space-y-2.5">
           {isLoading ? (
-            <div className="h-24 skeleton-shimmer rounded-2xl" />
+            <div className="h-20 skeleton-shimmer rounded-xl" />
           ) : (
             [...featuredSalons, ...nearbySalons].slice(0, 3).map((salon) => (
-              <div key={salon.id} className="flex items-center gap-3 bg-card rounded-2xl p-3 card-shadow">
-                <img src={salon.image} alt={salon.name} className="w-16 h-16 rounded-xl object-cover" />
+              <div key={salon.id} className="flex items-center gap-3 bg-card border border-border rounded-xl p-2.5 card-shadow">
+                <img src={salon.image} alt={salon.name} className="w-14 h-14 rounded-lg object-cover" />
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-heading font-semibold text-sm text-foreground truncate">{salon.name}</h4>
-                  <p className="text-[11px] font-body text-muted-foreground">{salon.address} • {salon.distance}</p>
-                  <div className="flex items-center gap-1 mt-1">
-                    <span className="text-xs text-accent">⭐ {salon.rating}</span>
-                    <span className="text-[10px] text-muted-foreground">• From ₹{salon.startingPrice}</span>
+                  <h4 className="font-body font-semibold text-sm text-foreground truncate">{salon.name}</h4>
+                  <p className="text-[11px] font-body text-muted-foreground">{salon.address} · {salon.distance}</p>
+                  <div className="flex items-center gap-1 mt-0.5">
+                    <span className="text-[11px] text-primary font-semibold">★ {salon.rating}</span>
+                    <span className="text-[10px] text-muted-foreground">· From ₹{salon.startingPrice}</span>
                   </div>
                 </div>
-                <button className="text-[11px] font-heading font-semibold text-primary bg-primary/10 px-3 py-1.5 rounded-lg active:scale-95 transition-transform flex-shrink-0">
+                <button className="text-[11px] font-body font-bold text-primary-foreground bg-primary px-3 py-1.5 rounded-lg active:scale-95 transition-transform flex-shrink-0">
                   Book
                 </button>
               </div>
