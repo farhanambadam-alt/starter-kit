@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { ArrowLeft, Share2, Star, MapPin, Clock, ChevronRight, ThumbsUp, Plus, Minus, Navigation, Heart, ShieldCheck, ChevronLeft } from 'lucide-react';
+import { ArrowLeft, Share2, Star, MapPin, Clock, ChevronRight, Plus, Minus, Navigation, Heart, ShieldCheck } from 'lucide-react';
 import ReviewsSection from '@/components/ReviewsSection';
+import RichServiceCard from '@/components/RichServiceCard';
+import { EmptyCartState } from '@/components/EmptyStates';
 import { useNavigate, useParams } from 'react-router-dom';
-import { featuredSalons, nearbySalons, services, artists, reviews } from '@/data/mockData';
+import { featuredSalons, nearbySalons, servicesWithImages, artists, reviews } from '@/data/mockData';
 
 const SalonDetail = () => {
   const { id } = useParams();
@@ -10,25 +12,16 @@ const SalonDetail = () => {
   const salon = [...featuredSalons, ...nearbySalons].find((s) => s.id === id) || featuredSalons[0];
 
   const [activeTab, setActiveTab] = useState<'services' | 'about' | 'reviews' | 'gallery'>('services');
-  const [serviceTab, setServiceTab] = useState<'men' | 'women' | 'packages' | 'outside'>('men');
+  const [serviceTab, setServiceTab] = useState<'men' | 'women' | 'packages'>('men');
   const [isFavorite, setIsFavorite] = useState(false);
   const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
   const [cart, setCart] = useState<Record<string, number>>({});
-  const [reviewFilter, setReviewFilter] = useState<string>('all');
 
-  const filteredServices = services.filter((s) => s.category === (serviceTab === 'outside' ? 'men' : serviceTab));
-  const filteredReviews = reviews.filter((r) => {
-    if (selectedArtist && r.artistId !== selectedArtist) return false;
-    if (reviewFilter === 'all') return true;
-    if (reviewFilter === '5') return r.rating === 5;
-    if (reviewFilter === '4') return r.rating >= 4;
-    if (reviewFilter === 'photos') return r.hasPhoto;
-    return true;
-  });
+  const filteredServices = servicesWithImages.filter((s) => s.category === serviceTab);
 
   const cartCount = Object.values(cart).reduce((a, b) => a + b, 0);
   const cartTotal = Object.entries(cart).reduce((total, [sId, qty]) => {
-    const service = services.find((s) => s.id === sId);
+    const service = servicesWithImages.find((s) => s.id === sId);
     return total + (service?.price || 0) * qty;
   }, 0);
 
@@ -56,10 +49,7 @@ const SalonDetail = () => {
             <ArrowLeft size={18} className="text-foreground" />
           </button>
           <div className="flex gap-2">
-            <button
-              onClick={() => setIsFavorite(!isFavorite)}
-              className="w-9 h-9 rounded-full bg-card/80 backdrop-blur-sm flex items-center justify-center"
-            >
+            <button onClick={() => setIsFavorite(!isFavorite)} className="w-9 h-9 rounded-full bg-card/80 backdrop-blur-sm flex items-center justify-center">
               <Heart size={16} className={isFavorite ? 'text-destructive fill-destructive' : 'text-foreground'} />
             </button>
             <button className="w-9 h-9 rounded-full bg-card/80 backdrop-blur-sm flex items-center justify-center">
@@ -132,7 +122,7 @@ const SalonDetail = () => {
 
       {activeTab === 'services' && (
         <div className="animate-fade-in-up" style={{ animationDuration: '300ms' }}>
-          {/* Artists - grid layout */}
+          {/* Artists grid */}
           <div className="px-4 pt-4">
             <h3 className="font-heading font-semibold text-sm text-foreground mb-3">Our Artists</h3>
             <div className="grid grid-cols-5 gap-2 pb-2">
@@ -147,10 +137,10 @@ const SalonDetail = () => {
             </div>
           </div>
 
-          {/* Tabs + Service List in glass */}
-          <div className="mx-3 glass-orange p-1">
-            <div className="flex gap-2 px-3 pt-3 pb-2">
-              {(['men', 'women', 'packages', 'outside'] as const).map((tab) => (
+          {/* Service Tabs */}
+          <div className="mx-3 mt-3">
+            <div className="flex gap-2 px-1 pb-3">
+              {(['men', 'women', 'packages'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setServiceTab(tab)}
@@ -158,46 +148,27 @@ const SalonDetail = () => {
                     serviceTab === tab ? 'bg-primary text-primary-foreground' : 'bg-secondary text-muted-foreground'
                   }`}
                 >
-                  {tab}
+                  {tab === 'packages' ? 'Packages' : tab === 'men' ? "Men's" : "Women's"}
                 </button>
               ))}
             </div>
 
-            <div className="px-3 space-y-2 pt-1 pb-3">
-              {filteredServices.map((service) => (
-                <div key={service.id} className="flex items-center justify-between bg-card rounded-2xl p-3 card-shadow">
-                  <div className="flex-1">
-                    <h4 className="font-heading font-medium text-sm text-foreground">{service.name}</h4>
-                    <span className="text-[10px] font-body text-muted-foreground bg-secondary px-2 py-0.5 rounded-full inline-block mt-1">
-                      {service.duration}
-                    </span>
-                    <div className="flex items-center gap-2 mt-1.5">
-                      <span className="font-heading font-semibold text-sm text-foreground">₹{service.price}</span>
-                      {service.originalPrice && (
-                        <span className="text-xs text-muted-foreground line-through">₹{service.originalPrice}</span>
-                      )}
-                    </div>
-                  </div>
-                  {cart[service.id] ? (
-                    <div className="flex items-center gap-2 bg-primary/10 rounded-xl px-1">
-                      <button onClick={() => removeFromCart(service.id)} className="p-1.5 text-primary">
-                        <Minus size={14} />
-                      </button>
-                      <span className="text-sm font-heading font-semibold text-primary w-4 text-center">{cart[service.id]}</span>
-                      <button onClick={() => addToCart(service.id)} className="p-1.5 text-primary">
-                        <Plus size={14} />
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => addToCart(service.id)}
-                      className="bg-primary text-primary-foreground text-xs font-heading font-medium px-4 py-2 rounded-xl active:scale-95 transition-transform animate-bounce-in"
-                    >
-                      Add
-                    </button>
-                  )}
-                </div>
-              ))}
+            {/* Rich Service Cards */}
+            <div className="space-y-3 pb-3">
+              {filteredServices.length === 0 ? (
+                <EmptyCartState onAction={() => setServiceTab('men')} />
+              ) : (
+                filteredServices.map((service) => (
+                  <RichServiceCard
+                    key={service.id}
+                    service={service}
+                    isAdded={!!cart[service.id]}
+                    qty={cart[service.id] || 0}
+                    onAdd={addToCart}
+                    onRemove={removeFromCart}
+                  />
+                ))
+              )}
             </div>
           </div>
         </div>
