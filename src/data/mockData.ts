@@ -1,7 +1,7 @@
 import salon1 from '@/assets/salon-1.jpg';
 import salon2 from '@/assets/salon-2.jpg';
 import salon3 from '@/assets/salon-3.jpg';
-import type { Salon, Service, Artist, Review, Booking, Category } from '@/types/salon';
+import type { Salon, Service, Artist, Review, Booking, Category, Professional, ServiceWithImage } from '@/types/salon';
 
 export const categories: Category[] = [
   { id: '1', name: 'Haircut', image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=120&h=120&fit=crop' },

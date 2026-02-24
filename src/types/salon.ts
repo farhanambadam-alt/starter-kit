@@ -59,3 +59,21 @@ export interface Category {
   name: string;
   image: string;
 }
+
+export interface Professional {
+  id: string;
+  name: string;
+  avatar: string;
+  specialty: string;
+  rating: number;
+  reviewCount: number;
+  verified: boolean;
+  arrivalTime: string;
+  startingPrice: number;
+  tags: string[];
+}
+
+export interface ServiceWithImage extends Service {
+  image: string;
+  description: string;
+}
