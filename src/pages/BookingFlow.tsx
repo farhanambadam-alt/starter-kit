@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ArrowLeft, Check, Calendar as CalendarIcon, Clock, User, Sparkles, ChevronRight } from 'lucide-react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { format, addDays, isSameDay } from 'date-fns';
-import { featuredSalons, nearbySalons, services, artists } from '@/data/mockData';
+import { format, addDays, isSameDay, isBefore, startOfDay } from 'date-fns';
+import { featuredSalons, nearbySalons, servicesWithImages, artists } from '@/data/mockData';
+import { FullyBookedState } from '@/components/EmptyStates';
 import { toast } from 'sonner';
 
 const timeSlots = [
@@ -14,6 +15,10 @@ const timeSlots = [
 
 const peakSlots = ['10:30 AM', '11:00 AM', '6:00 PM', '6:30 PM', '7:00 PM'];
 const unavailableSlots = ['1:00 PM', '3:30 PM'];
+const almostFullSlots = ['11:30 AM', '5:00 PM'];
+
+// Simulate a fully booked date (3 days from now)
+const fullyBookedDate = addDays(new Date(), 3);
 
 type Step = 'datetime' | 'barber' | 'summary';
 
@@ -25,9 +30,9 @@ const BookingFlow = () => {
 
   const cartFromState: Record<string, number> = location.state?.cart || {};
   const cartServices = Object.entries(cartFromState).map(([sId, qty]) => {
-    const svc = services.find((s) => s.id === sId);
+    const svc = servicesWithImages.find((s) => s.id === sId);
     return svc ? { ...svc, qty } : null;
-  }).filter(Boolean) as (typeof services[0] & { qty: number })[];
+  }).filter(Boolean) as (typeof servicesWithImages[0] & { qty: number })[];
 
   const cartTotal = cartServices.reduce((t, s) => t + s.price * s.qty, 0);
 
@@ -38,17 +43,21 @@ const BookingFlow = () => {
   const [autoAssign, setAutoAssign] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
 
-  // Generate next 14 days
   const dates = Array.from({ length: 14 }, (_, i) => addDays(new Date(), i));
-  const weekendDays = dates.filter(d => d.getDay() === 0 || d.getDay() === 6);
-
-  const canProceedToBarber = selectedDate && selectedTime;
+  const isFullyBooked = isSameDay(selectedDate, fullyBookedDate);
+  const canProceedToBarber = selectedDate && selectedTime && !isFullyBooked;
   const canProceedToSummary = selectedBarber || autoAssign;
 
   const handleConfirmBooking = () => {
     setBookingSuccess(true);
     toast.success('Booking confirmed! 🎉');
     setTimeout(() => navigate('/bookings'), 2000);
+  };
+
+  const handleShowNextAvailable = () => {
+    // Skip to the next day
+    const nextDate = addDays(fullyBookedDate, 1);
+    setSelectedDate(nextDate);
   };
 
   if (bookingSuccess) {
@@ -111,7 +120,7 @@ const BookingFlow = () => {
       {/* Step 1: Date & Time */}
       {step === 'datetime' && (
         <div className="animate-fade-in-up" style={{ animationDuration: '300ms' }}>
-          {/* Date Selector */}
+          {/* Horizontal Week Calendar */}
           <div className="px-4 pt-4">
             <h3 className="font-heading font-semibold text-sm text-foreground mb-3 flex items-center gap-2">
               <CalendarIcon size={16} className="text-primary" /> Select Date
@@ -119,15 +128,18 @@ const BookingFlow = () => {
             <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2">
               {dates.map((date) => {
                 const isSelected = isSameDay(date, selectedDate);
-                const isWeekend = date.getDay() === 0 || date.getDay() === 6;
                 const isToday = isSameDay(date, new Date());
+                const isBooked = isSameDay(date, fullyBookedDate);
+                const isWeekend = date.getDay() === 0 || date.getDay() === 6;
                 return (
                   <button
                     key={date.toISOString()}
-                    onClick={() => setSelectedDate(date)}
-                    className={`flex flex-col items-center gap-1 py-2 px-3 rounded-2xl flex-shrink-0 min-w-[56px] transition-all duration-200 ${
+                    onClick={() => { setSelectedDate(date); setSelectedTime(null); }}
+                    className={`flex flex-col items-center gap-0.5 py-2.5 px-3 rounded-2xl flex-shrink-0 min-w-[56px] transition-all duration-200 ${
                       isSelected
                         ? 'bg-primary text-primary-foreground shadow-md scale-105'
+                        : isBooked
+                        ? 'bg-destructive/10 border border-destructive/30 text-muted-foreground'
                         : 'bg-card border border-border text-foreground'
                     }`}
                   >
@@ -139,14 +151,13 @@ const BookingFlow = () => {
                       {format(date, 'MMM')}
                     </span>
                     {isToday && (
-                      <span className={`text-[8px] font-body font-medium ${isSelected ? 'text-primary-foreground' : 'text-primary'}`}>
-                        Today
-                      </span>
+                      <span className={`text-[8px] font-body font-medium ${isSelected ? 'text-primary-foreground' : 'text-primary'}`}>Today</span>
                     )}
-                    {isWeekend && !isToday && (
-                      <span className={`text-[8px] font-body ${isSelected ? 'text-primary-foreground/70' : 'text-accent'}`}>
-                        Almost full
-                      </span>
+                    {isBooked && !isSelected && (
+                      <span className="text-[7px] font-heading font-semibold text-destructive">Full</span>
+                    )}
+                    {isWeekend && !isToday && !isBooked && (
+                      <span className={`text-[8px] font-body ${isSelected ? 'text-primary-foreground/70' : 'text-accent'}`}>Busy</span>
                     )}
                   </button>
                 );
@@ -154,42 +165,54 @@ const BookingFlow = () => {
             </div>
           </div>
 
-          {/* Time Slots */}
-          <div className="px-4 pt-5">
-            <h3 className="font-heading font-semibold text-sm text-foreground mb-3 flex items-center gap-2">
-              <Clock size={16} className="text-primary" /> Available Slots
-            </h3>
-            <div className="grid grid-cols-3 gap-2">
-              {timeSlots.map((slot) => {
-                const isPeak = peakSlots.includes(slot);
-                const isUnavailable = unavailableSlots.includes(slot);
-                const isSelected = selectedTime === slot;
-                return (
-                  <button
-                    key={slot}
-                    disabled={isUnavailable}
-                    onClick={() => setSelectedTime(slot)}
-                    className={`relative py-2.5 px-2 rounded-xl text-xs font-body font-medium transition-all duration-200 ${
-                      isUnavailable
-                        ? 'bg-muted text-muted-foreground/40 cursor-not-allowed'
-                        : isSelected
-                        ? 'bg-primary text-primary-foreground shadow-md'
-                        : 'bg-card border border-border text-foreground active:scale-95'
-                    }`}
-                  >
-                    {slot}
-                    {isPeak && !isUnavailable && (
-                      <span className={`absolute -top-1 -right-1 text-[7px] font-heading font-semibold px-1 py-0.5 rounded-full ${
-                        isSelected ? 'bg-accent text-accent-foreground' : 'bg-accent/20 text-accent'
-                      }`}>
-                        Peak
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
+          {/* Time Slots or Fully Booked State */}
+          {isFullyBooked ? (
+            <FullyBookedState onAction={handleShowNextAvailable} />
+          ) : (
+            <div className="px-4 pt-5">
+              <h3 className="font-heading font-semibold text-sm text-foreground mb-3 flex items-center gap-2">
+                <Clock size={16} className="text-primary" /> Available Slots
+              </h3>
+              <div className="grid grid-cols-3 gap-2">
+                {timeSlots.map((slot) => {
+                  const isPeak = peakSlots.includes(slot);
+                  const isAlmostFull = almostFullSlots.includes(slot);
+                  const isUnavailable = unavailableSlots.includes(slot);
+                  const isSelected = selectedTime === slot;
+                  return (
+                    <button
+                      key={slot}
+                      disabled={isUnavailable}
+                      onClick={() => setSelectedTime(slot)}
+                      className={`relative py-2.5 px-2 rounded-xl text-xs font-body font-medium transition-all duration-200 ${
+                        isUnavailable
+                          ? 'bg-muted text-muted-foreground/40 cursor-not-allowed line-through'
+                          : isSelected
+                          ? 'bg-primary text-primary-foreground shadow-md scale-[1.02]'
+                          : 'bg-card border border-border text-foreground active:scale-95'
+                      }`}
+                    >
+                      {slot}
+                      {isPeak && !isUnavailable && (
+                        <span className={`absolute -top-1.5 -right-1.5 text-[7px] font-heading font-semibold px-1.5 py-0.5 rounded-full ${
+                          isSelected ? 'bg-accent text-accent-foreground' : 'bg-accent/20 text-accent'
+                        }`}>
+                          Peak
+                        </span>
+                      )}
+                      {isAlmostFull && !isUnavailable && !isPeak && (
+                        <span className={`absolute -top-1.5 -right-1.5 text-[7px] font-heading font-semibold px-1.5 py-0.5 rounded-full ${
+                          isSelected ? 'bg-destructive/80 text-destructive-foreground' : 'bg-destructive/15 text-destructive'
+                        }`}>
+                          Few left
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 
@@ -202,13 +225,10 @@ const BookingFlow = () => {
             </h3>
             <p className="text-xs text-muted-foreground font-body mb-4">Select your preferred stylist or let us assign the best available</p>
 
-            {/* Auto-assign option */}
             <button
               onClick={() => { setAutoAssign(true); setSelectedBarber(null); }}
               className={`w-full flex items-center gap-3 p-3 rounded-2xl mb-3 transition-all duration-200 ${
-                autoAssign
-                  ? 'bg-primary/10 border-2 border-primary'
-                  : 'bg-card border border-border'
+                autoAssign ? 'bg-primary/10 border-2 border-primary' : 'bg-card border border-border'
               }`}
             >
               <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
@@ -223,7 +243,6 @@ const BookingFlow = () => {
               {autoAssign && <Check size={18} className="text-primary" />}
             </button>
 
-            {/* Barber Cards */}
             <div className="space-y-2">
               {artists.map((artist) => {
                 const isSelected = selectedBarber === artist.id;
@@ -232,26 +251,18 @@ const BookingFlow = () => {
                     key={artist.id}
                     onClick={() => { setSelectedBarber(artist.id); setAutoAssign(false); }}
                     className={`w-full flex items-center gap-3 p-3 rounded-2xl transition-all duration-200 ${
-                      isSelected
-                        ? 'bg-primary/10 border-2 border-primary'
-                        : 'bg-card border border-border'
+                      isSelected ? 'bg-primary/10 border-2 border-primary' : 'bg-card border border-border'
                     }`}
                   >
-                    <div className={`w-14 h-14 rounded-full overflow-hidden border-2 ${
-                      isSelected ? 'border-primary' : 'border-transparent'
-                    }`}>
+                    <div className={`w-14 h-14 rounded-full overflow-hidden border-2 ${isSelected ? 'border-primary' : 'border-transparent'}`}>
                       <img src={artist.avatar} alt={artist.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="text-left flex-1">
                       <p className="font-heading font-medium text-sm text-foreground">{artist.name}</p>
                       <p className="text-[11px] font-body text-muted-foreground">{artist.specialty}</p>
-                      <span className="text-[10px] font-body font-medium text-success bg-success/10 px-2 py-0.5 rounded-full inline-block mt-1">
-                        Available
-                      </span>
+                      <span className="text-[10px] font-body font-medium text-success bg-success/10 px-2 py-0.5 rounded-full inline-block mt-1">Available</span>
                     </div>
-                    <div className="flex items-center gap-1 text-xs text-accent">
-                      ⭐ 4.{5 + parseInt(artist.id)}
-                    </div>
+                    <div className="flex items-center gap-1 text-xs text-accent">⭐ 4.{5 + parseInt(artist.id)}</div>
                     {isSelected && <Check size={18} className="text-primary" />}
                   </button>
                 );
@@ -265,7 +276,6 @@ const BookingFlow = () => {
       {step === 'summary' && (
         <div className="animate-fade-in-up" style={{ animationDuration: '300ms' }}>
           <div className="px-4 pt-4 space-y-4">
-            {/* Salon Card */}
             <div className="bg-card rounded-2xl p-3 card-shadow flex items-center gap-3">
               <img src={salon.image} alt={salon.name} className="w-16 h-16 rounded-xl object-cover" />
               <div>
@@ -274,7 +284,6 @@ const BookingFlow = () => {
               </div>
             </div>
 
-            {/* Barber */}
             <div className="bg-card rounded-2xl p-3 card-shadow">
               <h4 className="text-xs font-heading font-semibold text-muted-foreground mb-2">SPECIALIST</h4>
               {autoAssign ? (
@@ -295,7 +304,6 @@ const BookingFlow = () => {
               )}
             </div>
 
-            {/* Date & Time */}
             <div className="bg-card rounded-2xl p-3 card-shadow">
               <h4 className="text-xs font-heading font-semibold text-muted-foreground mb-2">DATE & TIME</h4>
               <div className="flex items-center gap-3">
@@ -310,7 +318,6 @@ const BookingFlow = () => {
               </div>
             </div>
 
-            {/* Services */}
             <div className="bg-card rounded-2xl p-3 card-shadow">
               <h4 className="text-xs font-heading font-semibold text-muted-foreground mb-2">SERVICES</h4>
               <div className="space-y-2">
@@ -326,7 +333,6 @@ const BookingFlow = () => {
               </div>
             </div>
 
-            {/* Coupon */}
             <details className="bg-card rounded-2xl card-shadow">
               <summary className="px-3 py-3 cursor-pointer text-sm font-heading font-medium text-primary flex items-center gap-2">
                 🎟️ Apply Coupon Code
@@ -334,19 +340,12 @@ const BookingFlow = () => {
               </summary>
               <div className="px-3 pb-3">
                 <div className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Enter coupon code"
-                    className="flex-1 bg-secondary rounded-xl px-3 py-2 text-sm font-body text-foreground placeholder:text-muted-foreground outline-none"
-                  />
-                  <button className="bg-primary text-primary-foreground text-sm font-heading font-medium px-4 py-2 rounded-xl">
-                    Apply
-                  </button>
+                  <input type="text" placeholder="Enter coupon code" className="flex-1 bg-secondary rounded-xl px-3 py-2 text-sm font-body text-foreground placeholder:text-muted-foreground outline-none" />
+                  <button className="bg-primary text-primary-foreground text-sm font-heading font-medium px-4 py-2 rounded-xl">Apply</button>
                 </div>
               </div>
             </details>
 
-            {/* Price Breakdown */}
             <div className="bg-card rounded-2xl p-3 card-shadow">
               <h4 className="text-xs font-heading font-semibold text-muted-foreground mb-2">PRICE BREAKDOWN</h4>
               <div className="space-y-1.5">

@@ -1,7 +1,7 @@
 import salon1 from '@/assets/salon-1.jpg';
 import salon2 from '@/assets/salon-2.jpg';
 import salon3 from '@/assets/salon-3.jpg';
-import type { Salon, Service, Artist, Review, Booking, Category } from '@/types/salon';
+import type { Salon, Service, Artist, Review, Booking, Category, Professional, ServiceWithImage } from '@/types/salon';
 
 export const categories: Category[] = [
   { id: '1', name: 'Haircut', image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=120&h=120&fit=crop' },
@@ -142,4 +142,25 @@ export const bookings: Booking[] = [
   { id: '1', salonName: 'Luxe Hair Studio', salonImage: salon1, services: ['Haircut & Styling', 'Beard Trim'], date: 'Mar 5, 2026', time: '10:30 AM', status: 'upcoming', totalPrice: 698 },
   { id: '2', salonName: 'Urban Glow', salonImage: salon3, services: ['Hair Spa'], date: 'Feb 20, 2026', time: '2:00 PM', status: 'completed', totalPrice: 799 },
   { id: '3', salonName: 'The Royal Salon', salonImage: salon2, services: ['Facial', 'Hair Color'], date: 'Feb 10, 2026', time: '11:00 AM', status: 'cancelled', totalPrice: 2398 },
+];
+
+export const professionals: Professional[] = [
+  { id: 'p1', name: 'Priya Sharma', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop', specialty: 'Hair Stylist & Colorist', rating: 4.9, reviewCount: 187, verified: true, arrivalTime: '~35 mins', startingPrice: 599, tags: ['Top Rated', 'Bridal Expert'] },
+  { id: 'p2', name: 'Rahul Kapoor', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop', specialty: 'Master Barber', rating: 4.8, reviewCount: 142, verified: true, arrivalTime: '~45 mins', startingPrice: 499, tags: ['Beard Specialist'] },
+  { id: 'p3', name: 'Anita Menon', avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop', specialty: 'Makeup & Skin Care', rating: 4.9, reviewCount: 256, verified: true, arrivalTime: '~40 mins', startingPrice: 899, tags: ['Celebrity MUA', 'Premium'] },
+  { id: 'p4', name: 'Vikram Reddy', avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop', specialty: 'Grooming Expert', rating: 4.7, reviewCount: 98, verified: true, arrivalTime: '~30 mins', startingPrice: 399, tags: ['Quick Service'] },
+  { id: 'p5', name: 'Deepa Lakshmi', avatar: 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=200&h=200&fit=crop', specialty: 'Facial & Spa Therapist', rating: 4.8, reviewCount: 174, verified: true, arrivalTime: '~50 mins', startingPrice: 799, tags: ['Spa Expert', 'Organic'] },
+];
+
+export const servicesWithImages: ServiceWithImage[] = [
+  { id: '1', name: 'Haircut & Styling', duration: '45 min', price: 499, originalPrice: 699, category: 'men', image: 'https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=200&h=200&fit=crop', description: 'Precision cut tailored to your face shape with expert styling and finishing.' },
+  { id: '2', name: 'Beard Trim', duration: '20 min', price: 199, category: 'men', image: 'https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=200&h=200&fit=crop', description: 'Clean trim and shaping with hot towel treatment for a polished look.' },
+  { id: '3', name: 'Hair Color', duration: '90 min', price: 1499, originalPrice: 1999, category: 'men', image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=200&h=200&fit=crop', description: 'Premium ammonia-free coloring with global or highlight options.' },
+  { id: '4', name: 'Facial', duration: '60 min', price: 899, originalPrice: 1199, category: 'men', image: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=200&h=200&fit=crop', description: 'Deep cleansing facial with extraction, mask, and massage for glowing skin.' },
+  { id: '5', name: 'Hair Spa', duration: '45 min', price: 799, category: 'women', image: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=200&h=200&fit=crop', description: 'Nourishing hair spa with keratin treatment for silky smooth hair.' },
+  { id: '6', name: 'Bridal Makeup', duration: '120 min', price: 4999, originalPrice: 6999, category: 'women', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=200&h=200&fit=crop', description: 'Complete bridal makeover with HD makeup, draping assistance, and touch-ups.' },
+  { id: '7', name: 'Manicure & Pedicure', duration: '75 min', price: 999, category: 'women', image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?w=200&h=200&fit=crop', description: 'Luxurious nail care with exfoliation, cuticle care, and premium polish.' },
+  { id: '8', name: 'Threading', duration: '15 min', price: 99, category: 'women', image: 'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=200&h=200&fit=crop', description: 'Precise eyebrow and facial threading for clean, defined brows.' },
+  { id: '9', name: 'Groom Package', duration: '180 min', price: 2999, originalPrice: 4499, category: 'packages', image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=200&h=200&fit=crop', description: 'Complete groom prep: haircut, facial, mani-pedi, and styling in one session.' },
+  { id: '10', name: 'Bridal Package', duration: '240 min', price: 8999, originalPrice: 12999, category: 'packages', image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=200&h=200&fit=crop', description: 'All-inclusive bridal beauty: makeup, hair, mani-pedi, and trial session.' },
 ];
