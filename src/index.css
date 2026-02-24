@@ -6,36 +6,36 @@
 
 @layer base {
   :root {
-    --background: 37 33% 96%;
-    --foreground: 0 0% 10%;
+    --background: 30 18% 93%;
+    --foreground: 280 30% 15%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 10%;
+    --card: 30 20% 99%;
+    --card-foreground: 280 30% 15%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 10%;
+    --popover: 30 20% 99%;
+    --popover-foreground: 280 30% 15%;
 
-    --primary: 43 56% 52%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 285 35% 28%;
+    --primary-foreground: 30 25% 97%;
 
-    --secondary: 34 30% 90%;
-    --secondary-foreground: 0 0% 10%;
+    --secondary: 32 30% 90%;
+    --secondary-foreground: 280 30% 15%;
 
-    --muted: 34 20% 93%;
-    --muted-foreground: 20 10% 45%;
+    --muted: 30 15% 93%;
+    --muted-foreground: 280 10% 45%;
 
-    --accent: 34 40% 80%;
-    --accent-foreground: 0 0% 10%;
+    --accent: 15 45% 72%;
+    --accent-foreground: 280 30% 15%;
 
     --destructive: 0 60% 55%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive-foreground: 30 25% 97%;
 
-    --success: 140 40% 30%;
-    --success-foreground: 0 0% 100%;
+    --success: 145 50% 42%;
+    --success-foreground: 30 25% 97%;
 
-    --border: 30 25% 90%;
-    --input: 30 25% 90%;
-    --ring: 43 56% 52%;
+    --border: 30 15% 88%;
+    --input: 30 15% 88%;
+    --ring: 285 35% 28%;
 
     --radius: 1rem;
 
@@ -48,40 +48,40 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    --font-heading: 'Playfair Display', serif;
-    --font-body: 'Plus Jakarta Sans', sans-serif;
+    --font-heading: 'Poppins', sans-serif;
+    --font-body: 'Inter', sans-serif;
     --font-serif: 'Playfair Display', serif;
     --font-sans: 'Plus Jakarta Sans', sans-serif;
 
-    --champagne: 37 50% 95%;
-    --bronze: 20 25% 52%;
+    --champagne: 30 42% 94%;
+    --bronze: 18 18% 51%;
     --truffle: 13 27% 14%;
 
-    --shadow-card: 0 2px 12px -2px hsl(20 20% 20% / 0.05);
-    --shadow-card-hover: 0 8px 24px -4px hsl(20 20% 20% / 0.1);
-    --shadow-bottom-bar: 0 -2px 16px -2px hsl(20 20% 20% / 0.08);
+    --shadow-card: 0 2px 12px -2px hsl(280 20% 20% / 0.06);
+    --shadow-card-hover: 0 8px 24px -4px hsl(280 20% 20% / 0.1);
+    --shadow-bottom-bar: 0 -2px 16px -2px hsl(280 20% 20% / 0.08);
   }
 
   .dark {
-    --background: 20 15% 8%;
+    --background: 280 20% 8%;
     --foreground: 30 15% 92%;
-    --card: 20 12% 12%;
+    --card: 280 18% 12%;
     --card-foreground: 30 15% 92%;
-    --popover: 20 12% 12%;
+    --popover: 280 18% 12%;
     --popover-foreground: 30 15% 92%;
-    --primary: 43 50% 55%;
-    --primary-foreground: 0 0% 8%;
-    --secondary: 20 15% 18%;
+    --primary: 285 30% 65%;
+    --primary-foreground: 280 20% 8%;
+    --secondary: 280 15% 18%;
     --secondary-foreground: 30 15% 92%;
-    --muted: 20 12% 16%;
+    --muted: 280 12% 16%;
     --muted-foreground: 30 10% 55%;
-    --accent: 34 35% 60%;
+    --accent: 15 40% 65%;
     --accent-foreground: 30 15% 92%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 20 12% 20%;
-    --input: 20 12% 20%;
-    --ring: 43 50% 55%;
+    --border: 280 12% 20%;
+    --input: 280 12% 20%;
+    --ring: 285 30% 65%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -125,13 +125,6 @@
   }
   .card-shadow-hover {
     box-shadow: var(--shadow-card-hover);
-  }
-
-  .glass-effect {
-    background: hsl(var(--card) / 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid hsl(var(--border) / 0.5);
   }
 
   .glass-orange {

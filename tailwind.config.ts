@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        heading: ['Playfair Display', 'serif'],
-        body: ['Plus Jakarta Sans', 'sans-serif'],
+        heading: ['Poppins', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
         serif: ['Playfair Display', 'serif'],
         sans: ['Plus Jakarta Sans', 'sans-serif'],
       },
